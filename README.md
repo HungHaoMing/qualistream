@@ -519,8 +519,3 @@ const IE_COLORS = ['ie-color-0','ie-color-1',/* …至 */ 'ie-color-7'];
 - [ ] **自動語音辨識**：整合 Web Speech API 或 Whisper API，實現上傳音檔後自動產生逐字稿
 - [ ] **波形顯示**：在音檔播放器中顯示音頻波形圖，方便定位特定片段
 
----
-
-## 授權
-
-MIT License — 自由使用、修改與分發，請保留原始版權聲明。
