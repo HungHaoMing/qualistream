@@ -79,11 +79,11 @@
       </div>
       <div v-for="seg in segments" :key="seg.id"
         class="sync-row"
-        :class="{ 'has-ts': seg.timestamp != null, 'mark-mode': markMode, playing: playingSegId === String(seg.id) }"
+        :class="{ 'has-ts': seg.timestamp_ms != null, 'mark-mode': markMode, playing: playingSegId === String(seg.id) }"
         @click="handleRowClick(seg, $event)">
-        <span class="timestamp-badge" :class="{ unset: seg.timestamp == null }"
-          @click.stop="seg.timestamp != null ? jumpTo(seg.timestamp) : (markMode && setTimestamp(seg))">
-          {{ seg.timestamp != null ? '▶ ' + formatTime(seg.timestamp / 1000) : '未標記' }}
+        <span class="timestamp-badge" :class="{ unset: seg.timestamp_ms == null }"
+          @click.stop="seg.timestamp_ms != null ? jumpTo(seg.timestamp_ms) : (markMode && setTimestamp(seg))">
+          {{ seg.timestamp_ms != null ? '▶ ' + formatTime(seg.timestamp_ms / 1000) : '未標記' }}
         </span>
         <span class="sync-row-speaker"
           :style="{ background: getSpeakerInfo(seg).hex + '22', color: getSpeakerInfo(seg).hex, border: '1px solid ' + getSpeakerInfo(seg).hex + '44' }">
@@ -121,10 +121,10 @@ const segments = computed(() => store.currentSegments)
 // Highlight by time
 watch(() => player.currentTime.value, (sec) => {
   if (!iv.value) return
-  const segs = segments.value.filter(s => s.timestamp != null)
+  const segs = segments.value.filter(s => s.timestamp_ms != null)
   let best = null
   segs.forEach(s => {
-    if (Number(s.timestamp) <= sec * 1000) best = s
+    if (Number(s.timestamp_ms) <= sec * 1000) best = s
   })
   playingSegId.value = best ? String(best.id) : null
 })
@@ -156,7 +156,7 @@ function loadFile(file) {
 
 function setTimestamp(seg) {
   const currentMs = player.getCurrentTimeMs()
-  seg.timestamp = currentMs
+  seg.timestamp_ms = currentMs
   toast('已標記：#' + seg.id + ' @ ' + formatTime(currentMs / 1000), 'success', 2000)
 }
 
@@ -167,7 +167,7 @@ function jumpTo(ms) {
 
 function handleRowClick(seg, event) {
   if (!markMode.value) return
-  if (event.target.classList.contains('timestamp-badge') && seg.timestamp != null) return
+  if (event.target.classList.contains('timestamp-badge') && seg.timestamp_ms != null) return
   if (event.target.classList.contains('sync-row-text') && editMode.value) return
   setTimestamp(seg)
 }
