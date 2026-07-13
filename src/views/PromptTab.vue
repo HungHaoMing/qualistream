@@ -51,8 +51,8 @@ const transcript = ref('')
 const promptOutput = ref('')
 
 const iv = computed(() => store.currentInterview)
-const ivList = computed(() => iv.value ? (iv.value.interviewers || '').split('\n').map(s => s.trim()).filter(Boolean) : [])
-const ieList = computed(() => iv.value ? (iv.value.interviewees || '').split('\n').map(s => s.trim()).filter(Boolean) : [])
+const ivList = computed(() => [...new Set(store.currentSegments.filter(s => s.speaker_role === 'researcher').map(s => s.speaker_name))])
+const ieList = computed(() => [...new Set(store.currentSegments.filter(s => s.speaker_role === 'participant').map(s => s.speaker_name))])
 const allSpeakers = computed(() => [...ivList.value, ...ieList.value])
 
 function generate() {

@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment: { POSTGRES_DB: qualistream, POSTGRES_USER: qualistream_admin, POSTGRES_PASSWORD_FILE: /run/secrets/postgres_admin_password }
+    volumes: [postgres_data:/var/lib/postgresql/data, ./ops/init-db.sh:/docker-entrypoint-initdb.d/10-app-role.sh:ro]
+    networks: [private]
+    secrets: [postgres_admin_password, postgres_app_password]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U qualistream_app -d qualistream"], interval: 10s, timeout: 5s, retries: 5 }
+  migrate:
+    build: ./server
+    command: ["node", "dist/migrate.js"]
+    env_file: ./server/.env
+    networks: [private]
+    secrets: [firebase_service_account]
+    depends_on: { postgres: { condition: service_healthy } }
+    restart: "no"
+  api:
+    build: ./server
+    restart: unless-stopped
+    env_file: ./server/.env
+    networks: [private, proxy]
+    secrets: [firebase_service_account]
+    depends_on: { migrate: { condition: service_completed_successfully } }
+  backup:
+    build: ./ops
+    restart: unless-stopped
+    env_file: ./ops/backup.env
+    volumes: [backups:/backups, ./ops:/ops:ro, /volume1/qualistream-offsite:/offsite]
+    networks: [private]
+    secrets: [postgres_app_password, backup_passphrase]
+    entrypoint: ["/bin/sh", "/ops/backup-loop.sh"]
+    depends_on: { postgres: { condition: service_healthy } }
+networks: { private: { internal: true }, proxy: {} }
+volumes: { postgres_data: {}, backups: {} }
+secrets:
+  postgres_admin_password: { file: ./secrets/postgres_admin_password }
+  postgres_app_password: { file: ./secrets/postgres_app_password }
+  firebase_service_account: { file: ./secrets/firebase-service-account.json }
+  backup_passphrase: { file: ./secrets/backup_passphrase }

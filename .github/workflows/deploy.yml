@@ -38,6 +38,15 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Frontend tests
+        run: npm test
+
+      - name: Backend install and verification
+        run: |
+          npm ci --prefix server
+          npm run typecheck --prefix server
+          npm test --prefix server
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 

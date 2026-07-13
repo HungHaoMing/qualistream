@@ -17,7 +17,7 @@
         class="project-item"
         :class="{ open: openProjects[project.id] }"
       >
-        <div class="project-header" @click="toggleProject(project.id)">
+        <div class="project-header" @click="selectProject(project.id)">
           <div class="project-title">
             <span class="project-toggle">▶</span>
             📁 {{ project.name }}
@@ -40,8 +40,8 @@
             @click="store.selectInterview(iv.id)"
           >
             <div class="interview-item-info">
-              <div class="interview-item-note">{{ iv.note || '（無標題）' }}</div>
-              <div class="interview-item-date">📅 {{ iv.date || '—' }}</div>
+              <div class="interview-item-note">{{ iv.title || '（無標題）' }}</div>
+              <div class="interview-item-date">📅 {{ iv.interview_date || '—' }}</div>
             </div>
             <button class="btn-icon danger" title="刪除" @click.stop="handleDeleteInterview(iv.id)">✕</button>
           </div>
@@ -62,6 +62,11 @@ defineEmits(['open-project-modal', 'open-interview-modal'])
 
 function toggleProject(id) {
   openProjects[id] = !openProjects[id]
+}
+
+async function selectProject(id) {
+  toggleProject(id)
+  if (store.currentProjectId !== id) await store.selectProject(id)
 }
 
 function handleDeleteProject(id) {

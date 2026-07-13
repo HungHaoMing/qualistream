@@ -1,7 +1,7 @@
 <template>
   <div class="panel-section">
     <h2 class="section-heading">📥 導入 AI 輸出 JSON</h2>
-    <p class="section-sub">將 AI 回傳的標準 JSON 字串貼入下方，綁定至目前選取的訪談後同步至 Google Sheets。</p>
+    <p class="section-sub">將 AI 回傳的標準 JSON 貼入下方，儲存至正式 PostgreSQL 資料庫。</p>
 
     <div v-if="!iv" class="empty-state">
       <div class="empty-icon">🔗</div>
@@ -12,9 +12,9 @@
     <div v-else>
       <div class="card">
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">導入目標</div>
-        <div style="font-weight:700;font-size:15px">{{ iv.note || '（無標題）' }}</div>
+        <div style="font-weight:700;font-size:15px">{{ iv.title || '（無標題）' }}</div>
         <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">
-          📁 {{ projectName }}&nbsp;|&nbsp;📅 {{ iv.date || '—' }}
+          📁 {{ projectName }}&nbsp;|&nbsp;📅 {{ iv.interview_date || '—' }}
         </div>
       </div>
       <div class="card">
@@ -27,7 +27,7 @@
           <button class="btn btn-secondary" @click="preview">👁️ 預覽（不儲存）</button>
           <button class="btn btn-primary" @click="importSync" :disabled="syncing">
             <span v-if="syncing" class="btn-spinner"></span>
-            {{ syncing ? '同步中…' : '☁️ 導入並同步至雲端' }}
+            {{ syncing ? '儲存中…' : '導入逐字稿' }}
           </button>
         </div>
       </div>
