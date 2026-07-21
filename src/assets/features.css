@@ -1,0 +1,44 @@
+.button.danger {
+  color: var(--danger);
+  border-color: #f2b8b5;
+  margin: 0 14px 16px auto;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.revision-panel {
+  margin-top: 12px;
+  padding: 11px;
+  background: #f7f8fb;
+  border-radius: 7px;
+}
+
+.revision-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.revision-title button {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+}
+
+.revision-row {
+  display: grid;
+  grid-template-columns: 145px 80px 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+.revision-row time { color: var(--muted); }
+.revision-row del { color: #9e3a36; }
+.detail-panel textarea { width: 100%; }
+.detail-panel .button { margin-top: 7px; }
+
